@@ -1,0 +1,57 @@
+# ============================================================
+# 株式会社ライコム — サイト共通設定（さくらのレンタルサーバ想定）
+# ============================================================
+
+AddDefaultCharset UTF-8
+
+# --- HTTPS と非 www へ URL を統一（SEO のため正規 URL を一本化） ---
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# www 付き → www なしへ 301 リダイレクト
+RewriteCond %{HTTP_HOST} ^www\.ricom-techno\.com$ [NC]
+RewriteRule ^(.*)$ https://ricom-techno.com/$1 [R=301,L]
+
+# HTTP → HTTPS へ 301 リダイレクト
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Sakura-Forwarded-For} ^$
+RewriteRule ^(.*)$ https://ricom-techno.com/$1 [R=301,L]
+
+# --- 旧URLから新サイトへの 301 リダイレクト ---
+
+# たすかるワーク（独立サイトへ）
+RewriteRule ^taskallwork(/.*)?$ https://taskall.work/ [R=301,L]
+
+# index.html → 正規URL（末尾スラッシュ形式）
+RewriteRule ^index\.html$ / [R=301,L]
+RewriteRule ^ricom/index\.html$ /ricom/ [R=301,L]
+RewriteRule ^contact/index\.html$ /contact/ [R=301,L]
+
+# 末尾スラッシュなし → あり（ディレクトリURLの統一）
+RewriteRule ^ricom$ /ricom/ [R=301,L]
+RewriteRule ^contact$ /contact/ [R=301,L]
+</IfModule>
+
+# --- セキュリティヘッダー ---
+<IfModule mod_headers.c>
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-Frame-Options "SAMEORIGIN"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set Strict-Transport-Security "max-age=31536000"
+</IfModule>
+
+# --- ブラウザキャッシュ（静的アセット） ---
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresByType text/css "access plus 1 month"
+ExpiresByType application/javascript "access plus 1 month"
+ExpiresByType image/svg+xml "access plus 1 month"
+ExpiresByType image/png "access plus 1 month"
+ExpiresByType image/jpeg "access plus 1 month"
+ExpiresByType image/webp "access plus 1 month"
+</IfModule>
+
+# --- 圧縮 ---
+<IfModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml
+</IfModule>
