@@ -1,7 +1,10 @@
 # 株式会社ライコム コーポレートサイト
 
-https://ricom-techno.com/ のリニューアル版です。
-静的 HTML + CSS + 最小限の JavaScript で構成しており、ビルド不要でそのままサーバーへアップロードできます。
+https://ricom-techno.com/ のリニューアル版です。  
+静的 HTML + CSS + 最小限の JavaScript で構成しており、ビルド不要です。
+
+公開先: [GitHub Pages](https://osamuchos.github.io/ricom/)（カスタムドメイン `ricom-techno.com`）  
+メール（`@ricom-techno.com`）とドメイン管理はさくらインターネット側で継続運用しています。
 
 ## 構成
 
@@ -15,38 +18,52 @@ https://ricom-techno.com/ のリニューアル版です。
 │   └── img/favicon.svg   # ファビコン
 ├── sitemap.xml           # 検索エンジン向けサイトマップ
 ├── robots.txt
-└── .htaccess             # HTTPS/非www 統一・セキュリティヘッダー・キャッシュ
+├── CNAME                 # カスタムドメイン（GitHub Pages が管理。通常は手動編集不要）
+└── .htaccess             # 旧・さくら向け（GitHub Pages では無効）
 ```
 
-## 公開手順（さくらのレンタルサーバ）
+## 公開・更新手順（GitHub Pages）
 
-1. ファイルマネージャまたは FTP/SFTP で、リポジトリの内容をドキュメントルート（例: `/home/xxxx/www/`）へアップロードします。
-2. 旧サイトの静的ファイル（旧 `/ricom/` の画像・HTML など）は、新ファイルで上書きされる `index.html` 以外は残っていても動作に影響しませんが、整理のため削除を推奨します。
-3. アップロード後、以下を確認してください。
+1. 変更を `master` にコミットして push します。
+2. リポジトリの **Settings → Pages** で、公開元が `master` / `/ (root)` になっていることを確認します。
+3. カスタムドメインに `ricom-techno.com` が設定され、**Enforce HTTPS** がオンであることを確認します。
+4. 反映後、以下を確認してください。
    - `https://ricom-techno.com/` が新デザインで表示される
-   - `http://` や `www.` 付き URL が `https://ricom-techno.com/` へリダイレクトされる
+   - `http://` や `www.` 付き URL が `https://ricom-techno.com/` へ誘導される
    - `/ricom/` `/contact/` が表示される
    - 「たすかるワーク」リンクが `https://taskall.work/` へ遷移する
-   - 旧URL `/taskallwork/` が `https://taskall.work/` へ 301 リダイレクトされる
 
-## 旧URLリダイレクト（.htaccess）
+通常は push から数分以内に反映されます。
 
-| 旧URL | リダイレクト先 |
-|-------|----------------|
-| `/taskallwork/` および配下 | `https://taskall.work/` |
-| `/index.html` | `/` |
-| `/ricom/index.html` | `/ricom/` |
-| `/contact/index.html` | `/contact/` |
-| `/ricom`（末尾スラッシュなし） | `/ricom/` |
-| `/contact`（末尾スラッシュなし） | `/contact/` |
+## DNS の役割分担（参考）
+
+ドメインの DNS はさくらのゾーンで管理しています。
+
+| 用途 | 設定の要点 |
+|------|------------|
+| Web（apex） | A / AAAA → GitHub Pages |
+| Web（www） | CNAME → `osamuchos.github.io` |
+| メール | MX → `www3449.sakura.ne.jp` など（さくら初期ドメイン） |
+| 送信認証 | SPF / DKIM / DMARC の TXT（さくら案内どおり） |
+
+Web の向き先だけを変える場合でも、**MX を apex（`@`）依存のままにしない**こと。apex の A を GitHub にするとメールが届かなくなります。
+
+## GitHub Pages で効かないもの
+
+`.htaccess` は Apache 用のため、GitHub Pages では無視されます。
+
+| 旧さくらでの挙動 | GitHub Pages |
+|------------------|--------------|
+| HTTPS / 非 www 統一（`.htaccess`） | Pages の Enforce HTTPS と DNS で対応 |
+| `/taskallwork/` → `https://taskall.work/` の 301 | **効かない**（必要なら別途対応） |
 
 ## 公開後にやること
 
-- [Google Search Console](https://search.google.com/search-console) で `sitemap.xml` を再送信する
+- [Google Search Console](https://search.google.com/search-console) でドメイン所有確認（DNS TXT `google-site-verification=...` を SPF と別レコードで追加）し、`sitemap.xml` を送信する
 - Google Analytics を利用する場合は GA4 の計測タグを各ページの `</head>` 直前に追加する（旧 UA タグは廃止済みのため移行が必要）
 
 ## 更新方法
 
 - 文言修正: 各 `index.html` を直接編集
 - 色やデザインの調整: `assets/css/style.css` 冒頭の CSS 変数（`--color-primary` など）を変更
-- ページ追加時: `sitemap.xml` に URL を追記
+- ページ追加時: `sitemap.xml` に URL を追記し、push する
