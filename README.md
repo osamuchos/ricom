@@ -10,6 +10,8 @@ https://ricom-techno.com/ のリニューアル版です。
 
 ```
 ├── index.html            # トップページ
+├── services/index.html   # サービス詳細
+├── works/index.html      # 実績・対応領域
 ├── ricom/index.html      # 会社概要（旧サイトの URL を維持）
 ├── contact/index.html    # お問い合わせ
 ├── taskallwork/index.html # 旧URL → https://taskall.work/ へのリダイレクト
@@ -31,7 +33,7 @@ https://ricom-techno.com/ のリニューアル版です。
 4. 反映後、以下を確認してください。
    - `https://ricom-techno.com/` が新デザインで表示される
    - `http://` や `www.` 付き URL が `https://ricom-techno.com/` へ誘導される
-   - `/ricom/` `/contact/` が表示される
+   - `/services/` `/works/` `/ricom/` `/contact/` が表示される
    - `/taskallwork/` が `https://taskall.work/` へ誘導される
    - 「たすかるワーク」リンクが `https://taskall.work/` へ遷移する
 
