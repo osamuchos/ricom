@@ -12,6 +12,7 @@ https://ricom-techno.com/ のリニューアル版です。
 ├── index.html            # トップページ
 ├── ricom/index.html      # 会社概要（旧サイトの URL を維持）
 ├── contact/index.html    # お問い合わせ
+├── taskallwork/index.html # 旧URL → https://taskall.work/ へのリダイレクト
 ├── assets/
 │   ├── css/style.css     # 共通スタイル
 │   ├── js/main.js        # ナビ開閉・スクロール表示・メール保護
@@ -31,6 +32,7 @@ https://ricom-techno.com/ のリニューアル版です。
    - `https://ricom-techno.com/` が新デザインで表示される
    - `http://` や `www.` 付き URL が `https://ricom-techno.com/` へ誘導される
    - `/ricom/` `/contact/` が表示される
+   - `/taskallwork/` が `https://taskall.work/` へ誘導される
    - 「たすかるワーク」リンクが `https://taskall.work/` へ遷移する
 
 通常は push から数分以内に反映されます。
@@ -55,7 +57,7 @@ Web の向き先だけを変える場合でも、**MX を apex（`@`）依存の
 | 旧さくらでの挙動 | GitHub Pages |
 |------------------|--------------|
 | HTTPS / 非 www 統一（`.htaccess`） | Pages の Enforce HTTPS と DNS で対応 |
-| `/taskallwork/` → `https://taskall.work/` の 301 | **効かない**（必要なら別途対応） |
+| `/taskallwork/` → `https://taskall.work/` の 301 | `taskallwork/index.html` で meta refresh + JS リダイレクト（HTTP 301 相当は不可） |
 
 ## 公開後にやること
 
